@@ -1,4 +1,15 @@
 {
     "title": "PACCAR CVP Object Directory",
-    "git-hub-client-id": "Iv23limd5FCKhbUWfN5A"
+    "git-hub-client-id": "Iv23limd5FCKhbUWfN5A",
+    "urlPatternEdit": "https://github.com/%s/%s/edit/%s/%s",
+    "urlPatternView": "https://github.com/%s/%s/blob/%s/%s",
+    "data": [
+        {
+            "title": "Test 1",
+            "branch": "master",
+            "owner": "gohugoio",
+            "repo": "hugoDocs",
+            "service": "GitHub"
+        }
+    ]
 }
