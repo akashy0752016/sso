@@ -1,26 +1,15 @@
 import React from "react";
 import { useEffect } from "react";
 import configData from "../config.json";
-import Header from "../components/common/Header";
-import Sidebar from "../components/common/Sidebar";
-import ReactDOM from 'react-dom/client';
-
-const footer = ReactDOM.createRoot(document.getElementById('footer'));
+import Layout from "../components/layout/Layout";
 
 const Home = () => {
     useEffect(() => {
         document.title = configData.title+ " | Home";
         document.getElementById("footer").classList.add('footer');
     }, []);
-    footer.render(
-        <>
-        <div className="copyright">&copy; Copyright <strong><span>PACCAR INC.</span></strong>. All Rights Reserved</div>
-        </>
-    );
     return (
-        <>
-            <Header />
-            <Sidebar />
+        <Layout>
             <main id="main" className="main">
 
                 <div className="pagetitle">
@@ -99,7 +88,7 @@ const Home = () => {
                 </section>
 
             </main>
-        </>
+        </Layout>
     );
 };
 
