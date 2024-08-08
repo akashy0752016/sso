@@ -2,6 +2,13 @@ import React from "react";
 import ConfigJson from "../../config.json";
 
 const Header = () => {
+    //const userName = localStorage.getItem('userName');
+
+    function signOut() {
+    localStorage.removeItem('accessToken'); 
+     window.location.href = "http://localhost:3000/";
+}
+
     return (
     <header id="header" className="header fixed-top d-flex align-items-center">
 
@@ -22,13 +29,12 @@ const Header = () => {
 
             <a className="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
                 <img src={ window.location.origin + "/assets/img/profile-img.jpg" } alt="Profile" className="rounded-circle" />
-                <span className="d-none d-md-block dropdown-toggle ps-2">K. Anderson</span>
+                            <span className="d-none d-md-block dropdown-toggle ps-2">AAAA</span>
             </a>
 
             <ul className="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
                 <li className="dropdown-header">
-                <h6>Kevin Anderson</h6>
-                <span>Web Designer</span>
+                <h6>AAAA</h6>
                 </li>
                 <li>
                 <hr className="dropdown-divider" />
@@ -67,7 +73,9 @@ const Header = () => {
                 <li>
                 <a className="dropdown-item d-flex align-items-center" href="#">
                     <i className="bi bi-box-arrow-right"></i>
-                    <span>Sign Out</span>
+                                    <button onClick={ signOut}>
+                             Log Out
+                    </button>
                 </a>
                 </li>
 
