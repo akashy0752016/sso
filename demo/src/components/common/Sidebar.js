@@ -12,12 +12,12 @@ const Sidebar = () => {
                 </a>
                 <ul id="tables-nav" className="nav-content collapse show" data-bs-parent="#sidebar-nav">
                 <li>
-                    <a href="tables-general.html" className="active">
+                    <a href="./object/1" className="active">
                     <i className="bi bi-circle"></i><span>General Tables</span>
                     </a>
                 </li>
                 <li>
-                    <a href="tables-data.html">
+                    <a href="./object/2">
                     <i className="bi bi-circle"></i><span>Data Tables</span>
                     </a>
                 </li>
