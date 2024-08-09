@@ -5,9 +5,12 @@ const Header = () => {
     //const userName = localStorage.getItem('userName');
 
     function signOut() {
-    localStorage.removeItem('accessToken'); 
-     window.location.href = "http://localhost:3000/";
-}
+        localStorage.removeItem('accessToken'); 
+        localStorage.removeItem('userName'); 
+        localStorage.removeItem('avatar_url'); 
+        localStorage.removeItem('html_url'); 
+        window.location.href = "http://localhost:3000/";
+    }
 
     return (
     <header id="header" className="header fixed-top d-flex align-items-center">
@@ -28,20 +31,20 @@ const Header = () => {
             <li className="nav-item dropdown pe-3">
 
             <a className="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
-                <img src={ window.location.origin + "/assets/img/profile-img.jpg" } alt="Profile" className="rounded-circle" />
-                            <span className="d-none d-md-block dropdown-toggle ps-2">AAAA</span>
+                <img src={ localStorage.getItem('avatar_url') } alt="Profile" className="rounded-circle" />
+                            <span className="d-none d-md-block dropdown-toggle ps-2">{localStorage.getItem('userName')}</span>
             </a>
 
             <ul className="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
                 <li className="dropdown-header">
-                <h6>AAAA</h6>
+                <h6>{localStorage.getItem('userName')}</h6>
                 </li>
                 <li>
                 <hr className="dropdown-divider" />
                 </li>
 
                 <li>
-                <a className="dropdown-item d-flex align-items-center" href="users-profile.html">
+                <a className="dropdown-item d-flex align-items-center" target="_blank" href={localStorage.getItem('html_url')}>
                     <i className="bi bi-person"></i>
                     <span>My Profile</span>
                 </a>
@@ -49,33 +52,10 @@ const Header = () => {
                 <li>
                 <hr className="dropdown-divider" />
                 </li>
-
                 <li>
-                <a className="dropdown-item d-flex align-items-center" href="users-profile.html">
-                    <i className="bi bi-gear"></i>
-                    <span>Account Settings</span>
-                </a>
-                </li>
-                <li>
-                <hr className="dropdown-divider" />
-                </li>
-
-                <li>
-                <a className="dropdown-item d-flex align-items-center" href="pages-faq.html">
-                    <i className="bi bi-question-circle"></i>
-                    <span>Need Help?</span>
-                </a>
-                </li>
-                <li>
-                <hr className="dropdown-divider" />
-                </li>
-
-                <li>
-                <a className="dropdown-item d-flex align-items-center" href="#">
+                <a className="dropdown-item d-flex align-items-center" href="#" onClick={signOut}>
                     <i className="bi bi-box-arrow-right"></i>
-                                    <button onClick={ signOut}>
-                             Log Out
-                    </button>
+                    <span>Sign Out</span>
                 </a>
                 </li>
 
