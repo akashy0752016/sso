@@ -46,6 +46,17 @@ app.get('/getUserData', async function (req, res) {
         res.json(data);
     });
 })
+
+app.get('/fetchData', async function (req, res) {
+    await fetch('https://raw.githubusercontent.com/akashy0752016/sso/develop/json/test.json ', {
+        method: 'GET',
+    }).then((response) => {
+        return response.json();
+    }).then((data) => {
+        console.log(data);
+        //res.json(data);
+    });
+})
 app.listen(4000, function() {
     console.log('CORS Server running on port 4000')
 });
