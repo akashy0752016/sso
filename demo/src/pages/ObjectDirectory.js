@@ -2,12 +2,48 @@ import React from "react";
 import { useEffect } from "react";
 import configData from "../config.json";
 import Layout from "../components/layout/Layout";
+import { useParams } from "react-router-dom";
 
-const ObjectDirectory = ({ match }) => {
+const ObjectDirectory = () => {
+    const objectId = useParams().objectId;
     useEffect(() => {
         document.title = configData.title+ " | Home";
         document.getElementById("footer").classList.add('footer');
+        const data = configData.data;
+        let gitHubObj = data.find((e) => {
+            if(e.id === objectId)
+                return e
+        });
+        let service = getService(gitHubObj.service);
+        if(gitHubObj.id !== null && service.name !== null) {
+            let viewUrl = service.urlPatternView.replace("owner", gitHubObj.owner)
+            .replace("repo", gitHubObj.repo)
+            .replace("branch", gitHubObj.branch)
+            .replace("path", gitHubObj.path);
+            let editUrl = service.urlPatternEdit.replace("owner", gitHubObj.owner)
+            .replace("repo", gitHubObj.repo)
+            .replace("branch", gitHubObj.branch)
+            .replace("path", gitHubObj.path);
+            fetchData();
+        }
     }, []);
+    async function fetchData() {
+        await fetch("http://localhost:4000/fetchData", {
+            method: 'GET',
+            headers: {'Content-Type':'application/json'},
+        }).then((response) => {
+            return response.json();
+          }).then((data) => {
+            console.log(data);
+          });
+    }
+    function getService(serviceName) {
+        return configData.services.find((service) => {
+            console.log(serviceName);
+            if(service.name === serviceName)
+                return service
+        })
+    }
     return (
         <Layout>
             <main id="main" className="main">
