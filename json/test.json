@@ -1,3 +1,13 @@
 {
-  "Test": "test"
+  "objectDirectory": [
+  {
+    "Test": "test"
+  },
+  {
+    "Test": "test"
+  },
+  {
+    "Test": "test"
+  }
+]
 }
