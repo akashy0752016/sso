@@ -28,16 +28,11 @@ const ObjectDirectory = () => {
             .replace("repo", gitHubObj.repo)
             .replace("branch", gitHubObj.branch)
             .replace("path", gitHubObj.path);
-            let rawUrl = service.rawPatternView.replace("owner", gitHubObj.owner)
-            .replace("repo", gitHubObj.repo)
-            .replace("branch", gitHubObj.branch)
-            .replace("path", gitHubObj.path);
             setObjectDirectorylement({
                 "title": gitHubObj.title,
                 "editUrl": editUrl,
                 "viewUrl": viewUrl
             });
-            console.log(rawUrl);
             (async () => {
                 fetchData(gitHubObj);
             })();
@@ -91,7 +86,7 @@ const ObjectDirectory = () => {
                     <div className="card">
                         <div className="card-body">
                         
-                        {isLoading ? <h5 className="card-title">Loading</h5> : <><h5 className="card-title d-flex justify-content-between align-items-center">{objectDirectorylement.title} <a class="btn btn-sm btn-primary" target="_blank" href={objectDirectorylement.editUrl}><i class="bi bi-pen"></i></a></h5><TableComponent data={data.objectDirectory} /></>}
+                        {isLoading ? <h5 className="card-title">Loading</h5> : <><h5 className="card-title d-flex justify-content-between align-items-center">{objectDirectorylement.title} <a class="btn btn-sm btn-primary" target="_blank" rel="noreferrer" href={objectDirectorylement.editUrl}><i class="bi bi-pen"></i></a></h5><TableComponent data={data.objectDirectory} /></>}
                         </div>
                     </div>
 

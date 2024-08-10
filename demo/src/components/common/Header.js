@@ -1,22 +1,19 @@
 import React from "react";
-import ConfigJson from "../../config.json";
 
 const Header = () => {
-    //const userName = localStorage.getItem('userName');
-
     function signOut() {
         localStorage.removeItem('accessToken'); 
         localStorage.removeItem('userName'); 
         localStorage.removeItem('avatar_url'); 
         localStorage.removeItem('html_url'); 
-        window.location.href = "http://localhost:3000/";
+        window.location.href = "http://localhost:3000/login";
     }
 
     return (
     <header id="header" className="header fixed-top d-flex align-items-center">
 
         <div className="d-flex align-items-center justify-content-between">
-        <a href="index.html" className="logo d-flex align-items-center">
+        <a href="/" className="logo d-flex align-items-center">
             <img src="assets/img/logo-1.png" alt="" />
             <span className="d-none d-lg-block">Object Directory</span>
         </a>
@@ -44,7 +41,7 @@ const Header = () => {
                 </li>
 
                 <li>
-                <a className="dropdown-item d-flex align-items-center" target="_blank" href={localStorage.getItem('html_url')}>
+                <a className="dropdown-item d-flex align-items-center" target="_blank" rel="noreferrer" href={localStorage.getItem('html_url')}>
                     <i className="bi bi-person"></i>
                     <span>My Profile</span>
                 </a>

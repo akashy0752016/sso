@@ -4,8 +4,8 @@ var bodyParser = require('body-parser');
 const fetch = (...args) => 
     import('node-fetch').then(({default: fetch}) => fetch(...args))
 
-const CLIENT_ID = 'Iv23limd5FCKhbUWfN5A';
-const CLIENT_SECRET = '640d6e40ea2d22037e662e18524c89fd4c8295a0';
+const CLIENT_ID = 'Ov23liS5JKJE9QSpoNEK';
+const CLIENT_SECRET = '757b610ebf6d38f983d20a3356e1a6c9fbc742c7';
 
 var app = express();
 
@@ -13,8 +13,6 @@ app.use(cors());
 app.use(bodyParser.json());
 
 app.get('/getAccessToken', async function (req, res) {
-    console.log(req.query.code);
-
     const params = '?scope=repo%2Cgist&client_id=' + CLIENT_ID + '&client_secret=' + CLIENT_SECRET + '&code=' + req.query.code;
 
     await fetch('https://github.com/login/oauth/access_token' + params, {
@@ -23,17 +21,17 @@ app.get('/getAccessToken', async function (req, res) {
             'Accept': 'application/json'
         }
     }).then((response) => {
-        console.log(response);
         return response.json();
     }).then((data) => {
         console.log(data);
         res.json(data);
+    }).catch((error) => {
+        console.log(error);
     });
 });
 
 app.get('/getUserData', async function (req, res) {
     req.get('Authorization'); // Bearer AccessToken
-    console.log(req);
     await fetch('https://api.github.com/user', {
         method: 'GET',
         headers: {
@@ -42,8 +40,9 @@ app.get('/getUserData', async function (req, res) {
     }).then((response) => {
         return response.json();
     }).then((data) => {
-        console.log(data);
         res.json(data);
+    }).catch((error) => {
+        console.log(error);
     });
 })
 
@@ -60,6 +59,8 @@ app.post('/fetchData', async function (req, res) {
         return response.json();
     }).then((data) => {
         res.json(data);
+    }).catch((error) => {
+        console.log(error);
     });
 })
 app.listen(4000, function() {
