@@ -47,14 +47,19 @@ app.get('/getUserData', async function (req, res) {
     });
 })
 
-app.get('/fetchData', async function (req, res) {
-    await fetch('https://raw.githubusercontent.com/akashy0752016/sso/develop/json/test.json ', {
+app.post('/fetchData', async function (req, res) {
+    await fetch("https://raw.githubusercontent.com/owner/repo/branch/path".replace("owner", req.body.owner)
+    .replace("repo", req.body.repo)
+    .replace("branch", req.body.branch)
+    .replace("path", req.body.path), {
         method: 'GET',
+        headers: {
+            'Accept': 'application/json'
+        }
     }).then((response) => {
         return response.json();
     }).then((data) => {
-        console.log(data);
-        //res.json(data);
+        res.json(data);
     });
 })
 app.listen(4000, function() {
