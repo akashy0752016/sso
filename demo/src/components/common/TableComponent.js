@@ -5,26 +5,28 @@ const TableComponent = ({ data }) => {
   const rows = data.map(item => Object.values(item));
 
   return (
-    <table className="table table-hover">
-      <thead>
-        <tr>
-            <th scope="col">#</th>
-            {headers.map(header => <th scope="col" key={header}>{header}</th>)}
-        </tr>
-      </thead>
-      <tbody>
-        {rows.map((row, index) => (
-          <tr key={index}>
-            <th scope="row">{index+1}</th>
-            {row.map((cell, index) => {
-              return <td key={index}>{
-                (typeof cell === 'boolean' || Array.isArray(cell)) ? cell.toString() : cell
-                }</td>;
-              })}
+    <div className="table-responsive">
+      <table className="table table-hover">
+        <thead>
+          <tr>
+              <th scope="col">#</th>
+              {headers.map(header => <th scope="col" key={header}>{header}</th>)}
           </tr>
-        ))}
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          {rows.map((row, index) => (
+            <tr key={index}>
+              <th scope="row">{index+1}</th>
+              {row.map((cell, index) => {
+                return <td key={index}>{
+                  (typeof cell === 'boolean' || Array.isArray(cell)) ? cell.toString() : cell
+                  }</td>;
+                })}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
   );
 };
 
