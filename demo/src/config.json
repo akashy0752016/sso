@@ -1,6 +1,6 @@
 {
     "title": "PACCAR CVP Object Directory",
-    "git-hub-client-id": "Ov23liS5JKJE9QSpoNEK",
+    "git-hub-client-id": "Iv23limd5FCKhbUWfN5A",
     "services": [
         {
             "name": "GitHub",
@@ -14,9 +14,9 @@
             "title": "Test 1",
             "branch": "develop",
             "owner": "akashy0752016",
-            "repo": "sso",
+            "repo": "temp",
             "service": "GitHub",
-            "path": "json/test.json"
+            "path": "test.json"
         }
     ]
 }

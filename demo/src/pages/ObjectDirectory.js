@@ -47,7 +47,7 @@ const ObjectDirectory = () => {
                 "branch": gitHubObj.branch,
                 "path": gitHubObj.path
             }),
-            headers: {'Content-Type':'application/json'}
+            headers: {'Content-Type':'application/json', "Authorization": 'Bearer ' + localStorage.getItem("accessToken")}
         }).then((response) => {
             return response.json();
         }).then((data) => {

@@ -4,8 +4,8 @@ var bodyParser = require('body-parser');
 const fetch = (...args) => 
     import('node-fetch').then(({default: fetch}) => fetch(...args))
 
-const CLIENT_ID = 'Ov23liS5JKJE9QSpoNEK';
-const CLIENT_SECRET = '757b610ebf6d38f983d20a3356e1a6c9fbc742c7';
+const CLIENT_ID = 'Iv23limd5FCKhbUWfN5A';
+const CLIENT_SECRET = 'd3610e655d2ddf4a72fa36ec0abeb8c31ba3530b';
 
 var app = express();
 
@@ -53,7 +53,8 @@ app.post('/fetchData', async function (req, res) {
     .replace("path", req.body.path), {
         method: 'GET',
         headers: {
-            'Accept': 'application/json'
+            'Accept': 'application/json',
+            'Authorization': req.get('Authorization')
         }
     }).then((response) => {
         return response.json();
