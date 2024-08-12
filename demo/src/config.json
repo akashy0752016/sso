@@ -11,12 +11,30 @@
     "data": [
         {
             "id": "1", 
-            "title": "Test 1",
+            "title": "Test",
             "branch": "develop",
             "owner": "akashy0752016",
             "repo": "temp",
             "service": "GitHub",
             "path": "test.json"
+        },
+        {
+            "id": "2", 
+            "title": "Test 1",
+            "branch": "develop",
+            "owner": "akashy0752016",
+            "repo": "temp",
+            "service": "GitHub",
+            "path": "test1.json"
+        },
+        {
+            "id": "3", 
+            "title": "Sample Json with internal json array",
+            "branch": "develop",
+            "owner": "akashy0752016",
+            "repo": "temp",
+            "service": "GitHub",
+            "path": "test2.json"
         }
     ]
 }

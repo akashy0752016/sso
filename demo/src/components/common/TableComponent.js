@@ -16,7 +16,11 @@ const TableComponent = ({ data }) => {
         {rows.map((row, index) => (
           <tr key={index}>
             <th scope="row">{index+1}</th>
-            {row.map((cell, index) => <td key={index}>{cell}</td>)}
+            {row.map((cell, index) => {
+              return <td key={index}>{
+                (typeof cell === 'boolean' || Array.isArray(cell)) ? cell.toString() : cell
+                }</td>;
+              })}
           </tr>
         ))}
       </tbody>

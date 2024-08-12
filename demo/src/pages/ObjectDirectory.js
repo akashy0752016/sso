@@ -84,7 +84,7 @@ const ObjectDirectory = () => {
                     <div className="col-lg-8">
 
                     <div className="card">
-                        <div className="card-body">
+                        <div className="card-body table-responsive">
                         
                         {isLoading ? <h5 className="card-title">Loading</h5> : <><h5 className="card-title d-flex justify-content-between align-items-center">{objectDirectorylement.title} <a class="btn btn-sm btn-primary" target="_blank" rel="noreferrer" href={objectDirectorylement.editUrl}><i class="bi bi-pen"></i></a></h5><TableComponent data={data.objectDirectory} /></>}
                         </div>
