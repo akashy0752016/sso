@@ -64,6 +64,188 @@ app.post('/fetchData', async function (req, res) {
         console.log(error);
     });
 })
+// Get Repository
+app.post("/get-repo", async function (req, res) {
+    await fetch(
+        "https://api.github.com/repos/owner/repo-name".replace("owner", req.body.owner)
+        .replace("repo-name", req.body.repo),
+        {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json',
+                'Authorization': req.get('Authorization')
+            }
+        }
+    ).then((response) => {
+        return response.json();
+    }).then((data) => {
+        res.json(data);
+    }).catch((error) => {
+        console.log(error);
+    });
+})
+
+//Get Branch
+app.post("/get-branch", async function (req, res) {
+    await fetch(
+        "https://api.github.com/repos/owner/repo-name/branches/branch-name".replace("owner", req.body.owner)
+        .replace("repo-name", req.body.repo)
+        .replace("branch-name", req.body.branch),
+        {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json',
+                'Authorization': req.get('Authorization')
+            }
+        }
+    ).then((response) => {
+        return response.json();
+    }).then((data) => {
+        res.json(data);
+    }).catch((error) => {
+        console.log(error);
+    });
+})
+
+//Create Tree
+app.post("/create-trees", async function (req, res) {
+    console.log(JSON.stringify(req.body.data));
+    await fetch(
+        "https://api.github.com/repos/owner/repo-name/git/trees".replace("owner", req.body.owner)
+        .replace("repo-name", req.body.repo),
+        {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Authorization': req.get('Authorization')
+            },
+            body: JSON.stringify(req.body.data)
+        }
+    ).then((response) => {
+        return response.json();
+    }).then((data) => {
+        res.json(data);
+    }).catch((error) => {
+        console.log(error);
+    });
+})
+
+//Get Tree
+app.post("/get-trees", async function (req, res) {
+    console.log(JSON.stringify(req.body.data));
+
+    await fetch(
+        "https://api.github.com/repos/owner/repo-name/git/trees/".replace("owner", req.body.owner)
+        .replace("repo-name", req.body.repo) + req.body.data.base_tree,
+        {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json',
+                'Authorization': req.get('Authorization')
+            }
+        }
+    ).then((response) => {
+        return response.json();
+    }).then((data) => {
+        res.json(data);
+    }).catch((error) => {
+        console.log(error);
+    });
+})
+
+//Commit
+app.post("/commit", async function (req, res) {
+    console.log(JSON.stringify(req.body.data));
+    await fetch(
+        "https://api.github.com/repos/owner/repo-name/git/commits".replace("owner", req.body.owner)
+        .replace("repo-name", req.body.repo),
+        {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Authorization': req.get('Authorization')
+            },
+            body: JSON.stringify(req.body.data)
+        }
+    ).then((response) => {
+        return response.json();
+    }).then((data) => {
+        res.json(data);
+    }).catch((error) => {
+        console.log(error);
+    });
+})
+
+//Create a reference
+app.post("/create-reference", async function (req, res) {
+    console.log(JSON.stringify(req.body.data));
+    await fetch(
+        "https://api.github.com/repos/owner/repo-name/git/refs".replace("owner", req.body.owner)
+        .replace("repo-name", req.body.repo),
+        {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Authorization': req.get('Authorization')
+            },
+            body: JSON.stringify(req.body.data)
+        }
+    ).then((response) => {
+        return response.json();
+    }).then((data) => {
+        res.json(data);
+    }).catch((error) => {
+        console.log(error);
+    });
+})
+
+//Get a Blob
+app.post("/get-a-blob", async function (req, res) {
+    console.log(JSON.stringify(req.body.data));
+    await fetch(
+        "https://api.github.com/repos/owner/repo-name/git/blobs/sha".replace("owner", req.body.owner)
+        .replace("repo-name", req.body.repo)
+        .replace("sha", req.body.data.sha),
+        {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json',
+                'Authorization': req.get('Authorization')
+            }
+        }
+    ).then((response) => {
+        return response.json();
+    }).then((data) => {
+        res.json(data);
+    }).catch((error) => {
+        console.log(error);
+    });
+})
+
+//Update Blob
+app.post("/update-file-content", async function (req, res) {
+    console.log(JSON.stringify(req.body.data));
+    await fetch(
+        "https://api.github.com/repos/owner/repo-name/contents/path".replace("owner", req.body.owner)
+        .replace("repo-name", req.body.repo)
+        .replace("path", req.body.path),
+        {
+            method: 'PUT',
+            headers: {
+                'Accept': 'application/json',
+                'Authorization': req.get('Authorization')
+            },
+            body: JSON.stringify(req.body.data)
+        }
+    ).then((response) => {
+        return response.json();
+    }).then((data) => {
+        res.json(data);
+    }).catch((error) => {
+        console.log(error);
+    });
+})
+
 app.listen(4000, function() {
     console.log('CORS Server running on port 4000')
 });
