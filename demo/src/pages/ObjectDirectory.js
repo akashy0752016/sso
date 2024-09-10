@@ -11,6 +11,8 @@ const ObjectDirectory = () => {
     const [objectDirectorylement, setObjectDirectorylement] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const objectId = useParams().objectId;
+    const [textarea, setTextarea] = useState();
+    const [gitHubObj, setGitHubObj] = useState();
     useEffect(() => {
         document.title = configData.title+ " | Home";
         document.getElementById("footer").classList.add('footer');
@@ -51,9 +53,10 @@ const ObjectDirectory = () => {
         }).then((response) => {
             return response.json();
         }).then((data) => {
-            console.log(data);
             setData(data);
+            setTextarea(JSON.stringify(data, null, 2));
             setIsLoading(false);
+            setGitHubObj(gitHubObj);
         });
     }
     function getService(serviceName) {
@@ -63,9 +66,79 @@ const ObjectDirectory = () => {
                 return service
         })
     }
-    console.log(data);
-    console.log(objectDirectorylement);
-    
+    console.log(gitHubObj);
+    //console.log(objectDirectorylement);
+
+    const handleChange = (event) => {
+        setTextarea(event.target.value);
+    }
+
+    const onSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            fetch("http://localhost:4000/get-branch", {
+                method: 'POST',
+                body: JSON.stringify({
+                    "owner": gitHubObj.owner,
+                    "repo": gitHubObj.repo,
+                    "branch": gitHubObj.branch,
+                }),
+                headers: {'Content-Type':'application/json', "Authorization": 'Bearer ' + localStorage.getItem("accessToken")}
+            }).then((response) => {
+                return response.json();
+            }).then((data) => {
+                const sha = data.commit.sha;
+                const treeSha = data.commit.commit.tree.sha
+                fetch("http://localhost:4000/get-trees", {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        "owner": gitHubObj.owner,
+                        "repo": gitHubObj.repo,
+                        "branch": gitHubObj.branch,
+                        "data": {
+                            "base_tree": treeSha
+                        }
+                    }),
+                    headers: {'Content-Type':'application/json', "Authorization": 'Bearer ' + localStorage.getItem("accessToken")}
+                }).then((response) => {
+                    return response.json();
+                }).then((data) => {
+                    const blobSha = data.tree.find((e) => {
+                        if(e.path === gitHubObj.path)
+                            return e
+                    }).sha;
+                    fetch("http://localhost:4000//update-file-content", {
+                        method: 'POST',
+                        body: JSON.stringify({
+                            "owner": gitHubObj.owner,
+                            "repo": gitHubObj.repo,
+                            "branch": gitHubObj.branch,
+                            "path": gitHubObj.path,
+                            "data": {
+                                "message":"Format Json 11",
+                                "content": "ewogICJvYmplY3REaXJlY3RvcnkiOiBbCiAgICB7CiAgICAgICJUZXN0IjogInRlc3QiCiAgICB9LAogICAgewogICAgICAiVGVzdCI6ICJ0ZXN0IgogICAgfSwKICAgIHsKICAgICAgIlRlc3QiOiAidGVzdDEyMzQiCiAgICB9CiAgXQp9",
+                                "sha": blobSha
+                            }
+                        }),
+                        headers: {'Content-Type':'application/json', "Authorization": 'Bearer ' + localStorage.getItem("accessToken")}
+                    }).then((response) => {
+                        return response.json();
+                    }).then((data) => {
+                        setData(data);
+                        setTextarea(JSON.stringify(data, null, 2));
+                        setIsLoading(false);
+                        setGitHubObj(gitHubObj);
+                    });
+                });
+            });
+        } catch (err) {
+            if (err.response.status === 500) {
+                console.log("There was a problem with the server.");
+            } else {
+                console.log(err.response.data.msg);
+            }
+        }
+    }
     return (
         <Layout>
             <main id="main" className="main">
@@ -86,7 +159,21 @@ const ObjectDirectory = () => {
                     <div className="card">
                         <div className="card-body">
                         
-                        {isLoading ? <h5 className="card-title">Loading</h5> : <><h5 className="card-title d-flex justify-content-between align-items-center">{objectDirectorylement.title} <a class="btn btn-sm btn-primary" target="_blank" rel="noreferrer" href={objectDirectorylement.editUrl}><i class="bi bi-pen"></i></a></h5><TableComponent data={data.objectDirectory} /></>}
+                        {isLoading ? 
+                            <h5 className="card-title">Loading</h5> 
+                            : 
+                            <>
+                                <h5 className="card-title d-flex justify-content-between align-items-center">
+                                    {objectDirectorylement.title} 
+                                    {gitHubObj &&
+                                        <button type="button" className="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#fullscreenModal">
+                                            <i className="bi bi-pen"></i>
+                                        </button>
+                                    }
+                                </h5>
+                                <TableComponent data={data.objectDirectory} />
+                            </>
+                        }
                         </div>
                     </div>
 
@@ -101,9 +188,50 @@ const ObjectDirectory = () => {
                             </div></>}
                     </div>
                 </div>
-                
                 </section>
-
+                <div class="spinner-grow spinner-grow-sm" role="status">
+                <span class="visually-hidden">Loading...</span>
+              </div>
+              <form onSubmit={onSubmit}>
+                <div className="modal fade" id="fullscreenModal" tabindex="-1">
+                    <div className="modal-dialog modal-fullscreen">
+                    <div className="modal-content">
+                        <div className="modal-header">
+                        <h5 className="modal-title">Edit Object Directory</h5>
+                        <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div className="modal-body">
+                            {
+                                gitHubObj &&
+                                <>
+                                    <input type="hidden" value={gitHubObj.id} name="id" />
+                                    <input type="hidden" value={gitHubObj.branch} name="branch" />
+                                    <input type="hidden" value={gitHubObj.owner} name="owner" />
+                                    <input type="hidden" value={gitHubObj.path} name="path" />
+                                    <input type="hidden" value={gitHubObj.repo} name="repo" />
+                                </>
+                            }
+                            <div class="row mb-3" style={{height: '80%'}}>
+                                <label for="inputText" class="col-sm-2 col-form-label">Update Content</label>
+                                <div class="col-sm-10">
+                                <textarea className="form-control" style={{height: '100%'}} value={textarea} onChange={handleChange} />
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <label for="inputText" class="col-sm-2 col-form-label">Text</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" />
+                                </div>
+                            </div>
+                        </div>
+                        <div className="modal-footer">
+                        <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" id="saveChanges" className="btn btn-primary">Save changes</button>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+              </form>
             </main>
         </Layout>
     );
