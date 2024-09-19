@@ -5,6 +5,8 @@ import Layout from "../components/layout/Layout";
 import { useParams } from "react-router-dom";
 import TableComponent from "../components/common/TableComponent";
 import PrettyPrintJson from "../components/common/PrettyPrintJson";
+import formSchema from '../components/common/formSchema.json';
+import DynamicForm from "../components/common/DynamicForm";
 
 const ObjectDirectory = () => {
     const [data, setData] = useState([]);
@@ -13,6 +15,9 @@ const ObjectDirectory = () => {
     const objectId = useParams().objectId;
     const [textarea, setTextarea] = useState();
     const [gitHubObj, setGitHubObj] = useState();
+    const handleFormSubmit = (formData) => {
+        console.log('Form Data:', formData);
+    };
     useEffect(() => {
         document.title = configData.title+ " | Home";
         document.getElementById("footer").classList.add('footer');
@@ -359,6 +364,9 @@ const ObjectDirectory = () => {
                                         </div>
                                     </div></>}
                             </div>
+                        </div>
+                        <div className="container mt-5">
+                            <DynamicForm schema={formSchema} onSubmit={handleFormSubmit} />
                         </div>
                     </section>
                 </div>
