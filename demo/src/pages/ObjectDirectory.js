@@ -5,6 +5,8 @@ import Layout from "../components/layout/Layout";
 import { useParams } from "react-router-dom";
 import TableComponent from "../components/common/TableComponent";
 import PrettyPrintJson from "../components/common/PrettyPrintJson";
+import formSchema from '../components/common/formSchema.json';
+import DynamicForm from "../components/common/DynamicForm";
 
 const ObjectDirectory = () => {
     const [data, setData] = useState([]);
@@ -13,7 +15,92 @@ const ObjectDirectory = () => {
     const objectId = useParams().objectId;
     const [textarea, setTextarea] = useState();
     const [gitHubObj, setGitHubObj] = useState();
+    const handleFormSubmit = (formData) => {
+        console.log('Form Data:', formData);
+    };
     useEffect(() => {
+        document.title = configData.title+ " | Home";
+        document.getElementById("footer").classList.add('footer');
+        let gitHubObj = configData.data.find((e) => {
+            if(e.id === objectId)
+                return e
+        });
+        console.log(gitHubObj);
+        let service = getService(gitHubObj.service);
+        if(gitHubObj.id !== null && service.name !== null) {
+            setObjectDirectorylement({
+                "title": gitHubObj.title
+            });
+            (async () => {
+                fetchData(gitHubObj);
+            })();
+        }
+    }, []);
+    function getService(serviceName) {
+        return configData.services.find((service) => {
+            console.log(serviceName);
+            if(service.name === serviceName)
+                return service
+        })
+    }
+    function fetchData(gitHubObj) {
+        console.log(gitHubObj);
+        if(gitHubObj.type === 'directory') {
+            console.log("Directory")
+            fetch(configData.serverEndpoints.uri+configData.serverEndpoints.getContent, {
+                method: 'POST',
+                body: JSON.stringify({
+                    "owner": gitHubObj.owner,
+                    "repo": gitHubObj.repo,
+                    "branch": gitHubObj.branch,
+                    "path": gitHubObj.path
+                }),
+                headers: {'Content-Type':'application/json', "Authorization": 'Bearer ' + localStorage.getItem("accessToken")}
+            }).then((response) => {
+                return response.json();
+            }).then((data) => {
+                //setData(data);
+                //setTextarea(JSON.stringify(data, null, 2));
+                
+                setGitHubObj(gitHubObj);
+                console.log(data);
+                Promise.all(data.map(u=>fetch(configData.serverEndpoints.uri+configData.serverEndpoints.getRawDataFromUrl,{
+                    method: 'POST',
+                    body: JSON.stringify({
+                        "url": u.download_url
+                    }),
+                    headers: {'Content-Type':'application/json', "Authorization": 'Bearer ' + localStorage.getItem("accessToken")}
+                }))).then(responses =>
+                    Promise.all(responses.map(res => res.json()))
+                ).then(jsons => {
+                    console.log(jsons)
+                    setData(jsons);
+                    setIsLoading(false);
+                })
+            });
+        } else {
+            console.log(configData.serverEndpoints.uri+configData.serverEndpoints.fetchData);
+            console.log(gitHubObj);
+            fetch(configData.serverEndpoints.uri+configData.serverEndpoints.fetchData, {
+                method: 'POST',
+                body: JSON.stringify({
+                    "owner": gitHubObj.owner,
+                    "repo": gitHubObj.repo,
+                    "branch": gitHubObj.branch,
+                    "path": gitHubObj.path
+                }),
+                headers: {'Content-Type':'application/json', "Authorization": 'Bearer ' + localStorage.getItem("accessToken")}
+            }).then((response) => {
+                return response.json();
+            }).then((data) => {
+                setData(data.objectDirectory);
+                //setTextarea(JSON.stringify(data, null, 2));
+                setIsLoading(false);
+                setGitHubObj(gitHubObj);
+            });
+        }
+    }
+    /*useEffect(() => {
         document.title = configData.title+ " | Home";
         document.getElementById("footer").classList.add('footer');
         let gitHubObj = configData.data.find((e) => {
@@ -167,7 +254,7 @@ const ObjectDirectory = () => {
                                     {objectDirectorylement.title} 
                                     {gitHubObj &&
                                         <button type="button" className="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#fullscreenModal">
-                                            <i className="bi bi-pen"></i>
+                                            <i className="bi bi-plus"></i>
                                         </button>
                                     }
                                 </h5>
@@ -232,6 +319,57 @@ const ObjectDirectory = () => {
                     </div>
                 </div>
               </form>
+            </main>
+        </Layout>
+    );*/
+    return (
+        <Layout>
+            <main id="main" className="main">
+                <div className="pagetitle">
+                    <h1>Directory</h1>
+                    <nav>
+                        <ol className="breadcrumb">
+                        <li className="breadcrumb-item active"><a href="/home">Home</a></li>
+                        </ol>
+                    </nav>
+                    <section className="section">
+                        <div className="row">
+                            <div className="col-lg-8">
+                                <div className="card">
+                                    <div className="card-body">
+                                        {isLoading ? 
+                                            <><h5 className="card-title">Loading</h5></>
+                                            :
+                                            <>
+                                                <h5 className="card-title d-flex justify-content-between align-items-center">
+                                                    {objectDirectorylement.title} 
+                                                    {gitHubObj &&
+                                                        <button type="button" className="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#fullscreenModal">
+                                                            <i className="bi bi-plus"></i>
+                                                        </button>
+                                                    }
+                                                </h5>
+                                                <TableComponent data={data} />
+                                            </>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="col-lg-4">
+                                {isLoading ? <></>:
+                                <>
+                                    <div className="card">
+                                        <div className="card-body">
+                                            <PrettyPrintJson data={data} />
+                                        </div>
+                                    </div></>}
+                            </div>
+                        </div>
+                        <div className="container mt-5">
+                            <DynamicForm schema={formSchema} onSubmit={handleFormSubmit} />
+                        </div>
+                    </section>
+                </div>
             </main>
         </Layout>
     );

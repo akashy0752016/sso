@@ -246,6 +246,47 @@ app.post("/update-file-content", async function (req, res) {
     });
 })
 
+//Get Content
+app.post("/get-content", async function (req, res) {
+    await fetch(
+        "https://api.github.com/repos/owner/repo-name/contents/path".replace("owner", req.body.owner)
+        .replace("repo-name", req.body.repo)
+        .replace("path", req.body.path),
+        {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json',
+                'Authorization': req.get('Authorization')
+            }
+        }
+    ).then((response) => {
+        return response.json();
+    }).then((data) => {
+        res.json(data);
+    }).catch((error) => {
+        console.log(error);
+    });
+})
+
+app.post("/get-raw-data-from-url", async function (req, res) {
+    await fetch(
+        req.body.url,
+        {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json',
+                'Authorization': req.get('Authorization')
+            }
+        }
+    ).then((response) => {
+        return response.json();
+    }).then((data) => {
+        res.json(data);
+    }).catch((error) => {
+        console.log(error);
+    });
+})
+
 app.listen(4000, function() {
     console.log('CORS Server running on port 4000')
 });
