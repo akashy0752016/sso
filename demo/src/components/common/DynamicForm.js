@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Form, Button, Row, Col } from 'react-bootstrap';
 
-const DynamicForm = ({ schema, onSubmit }) => {
+const DynamicForm = ({ schema, onSubmit, tempUuid }) => {
   const [formData, setFormData] = useState({});
   const [formErrors, setFormErrors] = useState({});
 
@@ -21,6 +21,8 @@ const DynamicForm = ({ schema, onSubmit }) => {
       if (section.fields) {
         section.fields.forEach((field) => {
           if (field.required && !formData[field.name]) {
+            console.log(field);
+            console.log(formData);
             formIsValid = false;
             errors[field.name] = 'This field is required';
           }
@@ -94,16 +96,44 @@ const DynamicForm = ({ schema, onSubmit }) => {
         );
       default:
         // Handle other HTML5 input types like date, email, etc.
-        return (
-          <Form.Control
-            type={field.type}
-            name={field.name}
-            placeholder={field.placeholder}
-            onChange={handleChange}
-            required={field.required}
-            value={formData[field.name] || ''}
-          />
-        );
+        if((!!field.readOnly && field.readOnly)) {
+          if(field.name === 'uuid') {
+            return (
+              <Form.Control
+                type={field.type}
+                name={field.name}
+                placeholder={field.placeholder}
+                onChange={handleChange}
+                required={field.required}
+                readOnly
+                value={tempUuid}
+              />
+            );
+          } else {
+            return (
+              <Form.Control
+                type={field.type}
+                name={field.name}
+                placeholder={field.placeholder}
+                onChange={handleChange}
+                required={field.required}
+                readOnly
+                value={formData[field.name] || ''}
+              />
+            );
+          }
+        } else {
+          return (
+            <Form.Control
+              type={field.type}
+              name={field.name}
+              placeholder={field.placeholder}
+              onChange={handleChange}
+              required={field.required}
+              value={formData[field.name] || ''}
+            />
+          );
+        }
     }
   };
 
