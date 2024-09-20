@@ -1,6 +1,12 @@
 {
     "title": "PACCAR CVP Object Directory",
     "git-hub-client-id": "Iv23limd5FCKhbUWfN5A",
+    "serverEndpoints": {
+        "uri": "http://localhost:4000/",
+        "getContent": "get-content",
+        "getRawDataFromUrl": "get-raw-data-from-url",
+        "fetchData": "fetchData"
+    },
     "services": [
         {
             "name": "GitHub",
@@ -11,30 +17,23 @@
     "data": [
         {
             "id": "1", 
-            "title": "Test",
+            "title": "Read Directory",
             "branch": "develop",
             "owner": "akashy0752016",
             "repo": "temp",
             "service": "GitHub",
-            "path": "test.json"
+            "path": "dataType",
+            "type": "directory"
         },
         {
             "id": "2", 
-            "title": "Test 1",
+            "title": "Read File",
             "branch": "develop",
             "owner": "akashy0752016",
             "repo": "temp",
             "service": "GitHub",
-            "path": "test1.json"
-        },
-        {
-            "id": "3", 
-            "title": "Sample Json with internal json array",
-            "branch": "develop",
-            "owner": "akashy0752016",
-            "repo": "temp",
-            "service": "GitHub",
-            "path": "test2.json"
+            "path": "test.json",
+            "type": "file"
         }
     ]
 }
