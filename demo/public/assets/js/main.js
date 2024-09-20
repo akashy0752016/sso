@@ -234,4 +234,7 @@
     }, 200);
   }
 
+  const triggerChangeEventByName = (name) => {
+    $("[name='"+name+"']").trigger('change');
+  }
 })();
