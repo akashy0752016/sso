@@ -47,6 +47,7 @@ const DynamicForm = ({ schema, onSubmit, tempUuid }) => {
         return (
           <Form.Select
             name={field.name}
+            id={field.name}
             onChange={handleChange}
             required={field.required}
           >
@@ -64,6 +65,7 @@ const DynamicForm = ({ schema, onSubmit, tempUuid }) => {
             key={index}
             type="radio"
             name={field.name}
+            id={field.name}
             value={option.value}
             label={option.label}
             onChange={handleChange}
@@ -76,6 +78,7 @@ const DynamicForm = ({ schema, onSubmit, tempUuid }) => {
           <Form.Check
             type="checkbox"
             name={field.name}
+            id={field.name}
             label={field.label}
             onChange={handleChange}
             required={field.required}
@@ -88,6 +91,7 @@ const DynamicForm = ({ schema, onSubmit, tempUuid }) => {
             as="textarea"
             rows={3}
             name={field.name}
+            id={field.name}
             placeholder={field.placeholder}
             onChange={handleChange}
             required={field.required}
@@ -102,6 +106,7 @@ const DynamicForm = ({ schema, onSubmit, tempUuid }) => {
               <Form.Control
                 type={field.type}
                 name={field.name}
+                id={field.name}
                 placeholder={field.placeholder}
                 onChange={handleChange}
                 required={field.required}
@@ -114,6 +119,7 @@ const DynamicForm = ({ schema, onSubmit, tempUuid }) => {
               <Form.Control
                 type={field.type}
                 name={field.name}
+                id={field.name}
                 placeholder={field.placeholder}
                 onChange={handleChange}
                 required={field.required}
@@ -127,6 +133,7 @@ const DynamicForm = ({ schema, onSubmit, tempUuid }) => {
             <Form.Control
               type={field.type}
               name={field.name}
+              id={field.name}
               placeholder={field.placeholder}
               onChange={handleChange}
               required={field.required}

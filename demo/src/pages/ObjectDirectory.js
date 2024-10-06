@@ -22,19 +22,27 @@ const ObjectDirectory = () => {
     const [formUuid, setFormUuid] = useState([]);
     
     const handleFormSubmit = (formData) => {
-        console.log('Form Data:', formData);
-        let message = formData.message;
-        delete formData.message;
-        console.log(JSON.stringify(formData, null, 2));
-        console.log();
+        var element = document.getElementsByName("uuid");
+        //console.log(element[0].value);        
+        //console.log('Form Data:', formData);
+        //console.log(typeof(formData));
+        const newData = {uuid: element[0].value, ...formData}
+        //console.log(newData)
+        //formData["uuid"] = element[0].value;
+        //let temp["uuid"] = element[0].value;
+        //console.log('Form Data:', formData);
+        let message = newData.message;
+        delete newData.message;
+        //console.log(JSON.stringify(newData, null, 2));
+        //console.log({"message": message, content: Buffer.from(JSON.stringify(newData, null, 2)).toString('base64') });
         fetch("http://localhost:4000/update-file-content", {
             method: 'POST',
             body: JSON.stringify({
                 "owner": gitHubObj.owner,
                 "repo": gitHubObj.repo,
                 "branch": gitHubObj.branch,
-                "path": gitHubObj.path+"/"+formData.uuid+".json",
-                "data": {"message": message, content: Buffer.from(JSON.stringify(formData, null, 2)).toString('base64') }
+                "path": gitHubObj.path+"/"+newData.uuid+".json",
+                "data": {"message": message, content: Buffer.from(JSON.stringify(newData, null, 2)).toString('base64') }
             }),
             headers: {'Content-Type':'application/json', "Authorization": 'Bearer ' + localStorage.getItem("accessToken")}
         }).then((response) => {
@@ -88,6 +96,7 @@ const ObjectDirectory = () => {
                 Promise.all(data.filter(u=>!(u.name.startsWith("formData"))).map(u=>fetchRawFileFromUrlPromise(u.download_url))).then(responses =>
                     Promise.all(responses.map(res => res.json()))
                 ).then(json => {
+                    console.log(json);
                     setData(json);
                     setIsLoading(false);
                 })
@@ -129,7 +138,7 @@ const ObjectDirectory = () => {
                                                         </button>
                                                     }
                                                 </h5>
-                                                <TableComponent data={data} />
+                                                <TableComponent data={data} formSchema={formSchema} />
                                             </>
                                         }
                                     </div>
@@ -159,9 +168,7 @@ const ObjectDirectory = () => {
                             </div>
                             <div className="modal-footer">
                                 <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                {/* <button type="submit" id="saveChanges" className="btn btn-primary">Save changes</button> */}
                             </div>
-                            <script>triggerChangeEventByName('uuid')</script>
                         </div>
                     </div>
                 </div>
