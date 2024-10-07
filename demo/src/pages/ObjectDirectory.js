@@ -7,7 +7,7 @@ import TableComponent from "../components/common/TableComponent";
 import PrettyPrintJson from "../components/common/PrettyPrintJson";
 //import formSchema from '../components/common/formSchema.json';
 import DynamicForm from "../components/common/DynamicForm";
-import {fetchRawFileFromUrlPromise, fetchData, getService} from "../components/helper/helper.js";
+import {fetchRawFileFromUrlPromise, fetchData, getService, processFormData} from "../components/helper/helper.js";
 import { v4 as uuid } from 'uuid';
 import {Buffer} from 'buffer';
 
@@ -49,7 +49,7 @@ const ObjectDirectory = () => {
             return response.json();
         })
         .then((data) => {
-            console.log(data);
+            //console.log(data);
             if(alert('Data saved successfully.')){}
             else    window.location.reload(); 
         });
@@ -77,8 +77,8 @@ const ObjectDirectory = () => {
             fetchData("getContent", gitHubObj)
             .then((data) => {
                 setGitHubObj(gitHubObj);
-                console.log(data);
-                console.log(data.filter(u=>!(u.name.startsWith("formData"))));
+                //console.log(data);
+                //console.log(data.filter(u=>!(u.name.startsWith("formData"))));
                 if(!!data.find(u=>u.name.startsWith("formData"))) {
                     fetchRawFileFromUrlPromise(data.find(u=>u.name.startsWith("formData")).download_url)
                     .then((response) => {
@@ -86,7 +86,10 @@ const ObjectDirectory = () => {
                     })
                     .then((data) => {
                         let id = uuid();
-                        setFormSchema(data);
+                        let formData = processFormData(data);
+                        //console.log(data[0]);
+                        //console.log(data[0].fields.filter(u=>(u.type==='select')));
+                        setFormSchema(formData);
                         setFormUuid(id);
                         //console.log($("[name='uuid']"));
                         //document.getElementsByName("uuid")[0].value=id;
@@ -96,7 +99,7 @@ const ObjectDirectory = () => {
                 Promise.all(data.filter(u=>!(u.name.startsWith("formData"))).map(u=>fetchRawFileFromUrlPromise(u.download_url))).then(responses =>
                     Promise.all(responses.map(res => res.json()))
                 ).then(json => {
-                    console.log(json);
+                    //console.log(json);
                     setData(json);
                     setIsLoading(false);
                 })

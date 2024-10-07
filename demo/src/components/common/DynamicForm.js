@@ -44,6 +44,7 @@ const DynamicForm = ({ schema, onSubmit, tempUuid }) => {
   const renderField = (field) => {
     switch (field.type) {
       case 'select':
+        console.log(field);
         return (
           <Form.Select
             name={field.name}
@@ -145,7 +146,7 @@ const DynamicForm = ({ schema, onSubmit, tempUuid }) => {
   };
 
   return (
-    <Form onSubmit={handleSubmit}>
+    <Form onSubmit={handleSubmit} className='formData'>
       {schema.map((section, sectionIndex) => (
         <div key={sectionIndex}>
           <h3>{section.sectionTitle}</h3>
