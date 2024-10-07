@@ -11,10 +11,15 @@ const TableComponent = ({ data, formSchema }) => {
     const row = rows.find(row => row.uuid === uuid);
     //document.getElementById('#fullscreenEdit #uuid').value = 
     console.log(document.querySelector("#fullscreenEdit .formData"));
-    document.getElementsByClassName("formData").reset();
+    //document.getElementsByClassName("formData").reset();
     document.querySelector("#fullscreenEdit .formData").reset();
-    console.log(document.querySelector("#fullscreenEdit #uuid"));
-    document.querySelector("#fullscreenEdit #uuid").value="Test";
+    let obj = data.find(u => u.uuid === uuid);
+    Object.keys(obj).forEach(function(k){
+      console.log(k + ' - ' + obj[k]);
+      document.querySelector("#fullscreenEdit #" + k).value=obj[k];
+    });
+    //console.log(document.querySelector("#fullscreenEdit #uuid"));
+    
   }
   return (
     <div className="table-responsive">
@@ -47,7 +52,7 @@ const TableComponent = ({ data, formSchema }) => {
                     <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div className="modal-body">
-                    
+                    <DynamicForm schema={formSchema} onSubmit={""} tempUuid={""} />
                 </div>
                 <div className="modal-footer">
                     <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>

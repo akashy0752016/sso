@@ -159,6 +159,7 @@ const ObjectDirectory = () => {
                         </div>
                     </section>
                 </div>
+                {isLoading ? <></>:<>
                 <div className="modal fade" id="fullscreenModal" tabindex="-1">
                     <div className="modal-dialog modal-fullscreen">
                         <div className="modal-content">
@@ -175,6 +176,7 @@ const ObjectDirectory = () => {
                         </div>
                     </div>
                 </div>
+                </>}
             </main>
         </Layout>
     );

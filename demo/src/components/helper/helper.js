@@ -53,7 +53,7 @@ export const processFormData = (formdata) => {
                             Promise.allSettled(responses.map(res => res.json()))
                         ).then(json => {
                             u.options = json.map(e => {
-                                return { lable: e.value[u.data.key], value: e.value[u.data.key] };
+                                return { label: e.value[u.data.key], value: e.value[u.data.key] };
                             });
                         });
                     });
