@@ -20,36 +20,30 @@ const ObjectDirectory = () => {
     const [formSchema, setFormSchema] = useState([]);
     const [gitHubObj, setGitHubObj] = useState();
     const [formUuid, setFormUuid] = useState([]);
+    const [filePath, setFilePath] = useState([]);
+    const [fileSha, setFileSha] = useState([]);
     
     const handleFormSubmit = (formData) => {
-        var element = document.getElementsByName("uuid");
-        //console.log(element[0].value);        
-        //console.log('Form Data:', formData);
-        //console.log(typeof(formData));
-        const newData = {uuid: element[0].value, ...formData}
-        //console.log(newData)
-        //formData["uuid"] = element[0].value;
-        //let temp["uuid"] = element[0].value;
-        //console.log('Form Data:', formData);
+        var element = document.querySelector("#fullscreenModal #uuid");
+        const newData = {uuid: element.value, ...formData}
         let message = newData.message;
         delete newData.message;
-        //console.log(JSON.stringify(newData, null, 2));
-        //console.log({"message": message, content: Buffer.from(JSON.stringify(newData, null, 2)).toString('base64') });
+        data.push(newData);
+        console.log({"message": message, content: Buffer.from(JSON.stringify(data, null, 2)).toString('base64'), sha: fileSha })
         fetch("http://localhost:4000/update-file-content", {
             method: 'POST',
             body: JSON.stringify({
                 "owner": gitHubObj.owner,
                 "repo": gitHubObj.repo,
                 "branch": gitHubObj.branch,
-                "path": gitHubObj.path+"/"+newData.uuid+".json",
-                "data": {"message": message, content: Buffer.from(JSON.stringify(newData, null, 2)).toString('base64') }
+                "path": filePath,
+                "data": {"message": message, content: Buffer.from(JSON.stringify(data, null, 2)).toString('base64'), sha: fileSha }
             }),
             headers: {'Content-Type':'application/json', "Authorization": 'Bearer ' + localStorage.getItem("accessToken")}
         }).then((response) => {
             return response.json();
         })
         .then((data) => {
-            //console.log(data);
             if(alert('Data saved successfully.')){}
             else    window.location.reload(); 
         });
@@ -77,8 +71,6 @@ const ObjectDirectory = () => {
             fetchData("getContent", gitHubObj)
             .then((data) => {
                 setGitHubObj(gitHubObj);
-                //console.log(data);
-                //console.log(data.filter(u=>!(u.name.startsWith("formData"))));
                 if(!!data.find(u=>u.name.startsWith("formData"))) {
                     fetchRawFileFromUrlPromise(data.find(u=>u.name.startsWith("formData")).download_url)
                     .then((response) => {
@@ -87,15 +79,14 @@ const ObjectDirectory = () => {
                     .then((data) => {
                         let id = uuid();
                         let formData = processFormData(data);
-                        //console.log(data[0]);
-                        //console.log(data[0].fields.filter(u=>(u.type==='select')));
                         setFormSchema(formData);
                         setFormUuid(id);
-                        //console.log($("[name='uuid']"));
-                        //document.getElementsByName("uuid")[0].value=id;
                     });
                 }
                 if(data.filter(u=>!(u.name.startsWith("formData")))) {
+                    console.log(data);
+                    setFilePath(data.find(u=>!(u.name.startsWith("formData"))).path);
+                    setFileSha(data.find(u=>!(u.name.startsWith("formData"))).sha);
                     fetchRawFileFromUrlPromise(data.find(u=>!(u.name.startsWith("formData"))).download_url)
                     .then((response) => {
                         return response.json();
