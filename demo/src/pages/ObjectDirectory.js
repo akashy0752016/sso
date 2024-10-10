@@ -95,14 +95,16 @@ const ObjectDirectory = () => {
                         //document.getElementsByName("uuid")[0].value=id;
                     });
                 }
-                
-                Promise.all(data.filter(u=>!(u.name.startsWith("formData"))).map(u=>fetchRawFileFromUrlPromise(u.download_url))).then(responses =>
-                    Promise.all(responses.map(res => res.json()))
-                ).then(json => {
-                    //console.log(json);
-                    setData(json);
-                    setIsLoading(false);
-                })
+                if(data.filter(u=>!(u.name.startsWith("formData")))) {
+                    fetchRawFileFromUrlPromise(data.find(u=>!(u.name.startsWith("formData"))).download_url)
+                    .then((response) => {
+                        return response.json();
+                    })
+                    .then((data) => {
+                        setData(data);
+                        setIsLoading(false);
+                    });
+                }
             });
         } else {
             fetchData("fetchData", gitHubObj)

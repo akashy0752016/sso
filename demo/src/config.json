@@ -17,12 +17,12 @@
     "data": [
         {
             "id": "1", 
-            "title": "Read Directory",
+            "title": "Read Directory 1",
             "branch": "develop",
             "owner": "akashy0752016",
             "repo": "temp",
             "service": "GitHub",
-            "path": "dataType",
+            "path": "test",
             "type": "directory"
         },
         {

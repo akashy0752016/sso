@@ -4,6 +4,7 @@ import DynamicForm from './DynamicForm';
 const TableComponent = ({ data, formSchema }) => {
   const headers = [...Object.keys(data[0]), "action"];
   const rows = data.map(item => {
+    console.log(item);
     return {...item, 'action': item.uuid}
   });
 
