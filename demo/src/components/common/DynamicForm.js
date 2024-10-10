@@ -44,7 +44,6 @@ const DynamicForm = ({ schema, onSubmit, tempUuid }) => {
   const renderField = (field) => {
     switch (field.type) {
       case 'select':
-        console.log(field);
         return (
           <Form.Select
             name={field.name}
@@ -165,6 +164,21 @@ const DynamicForm = ({ schema, onSubmit, tempUuid }) => {
                   </Form.Group>
                 </Col>
               ))}
+          </Row>
+          <Row>
+            <Col md={12} sm={12}>
+              <Form.Group className="mb-3">
+                <Form.Control
+                as="textarea"
+                rows={3}
+                name={"message"}
+                id={"message"}
+                placeholder={"Commit message"}
+                onChange={handleChange}
+                required={true}
+                />
+              </Form.Group>
+            </Col>
           </Row>
         </div>
       ))}
