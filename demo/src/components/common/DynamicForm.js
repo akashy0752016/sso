@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Form, Button, Row, Col } from 'react-bootstrap';
 
-const DynamicForm = ({ schema, onSubmit }) => {
+const DynamicForm = ({ schema, onSubmit, tempUuid }) => {
   const [formData, setFormData] = useState({});
   const [formErrors, setFormErrors] = useState({});
 
@@ -21,6 +21,8 @@ const DynamicForm = ({ schema, onSubmit }) => {
       if (section.fields) {
         section.fields.forEach((field) => {
           if (field.required && !formData[field.name]) {
+            console.log(field);
+            console.log(formData);
             formIsValid = false;
             errors[field.name] = 'This field is required';
           }
@@ -45,6 +47,7 @@ const DynamicForm = ({ schema, onSubmit }) => {
         return (
           <Form.Select
             name={field.name}
+            id={field.name}
             onChange={handleChange}
             required={field.required}
           >
@@ -62,6 +65,7 @@ const DynamicForm = ({ schema, onSubmit }) => {
             key={index}
             type="radio"
             name={field.name}
+            id={field.name}
             value={option.value}
             label={option.label}
             onChange={handleChange}
@@ -74,6 +78,7 @@ const DynamicForm = ({ schema, onSubmit }) => {
           <Form.Check
             type="checkbox"
             name={field.name}
+            id={field.name}
             label={field.label}
             onChange={handleChange}
             required={field.required}
@@ -86,6 +91,7 @@ const DynamicForm = ({ schema, onSubmit }) => {
             as="textarea"
             rows={3}
             name={field.name}
+            id={field.name}
             placeholder={field.placeholder}
             onChange={handleChange}
             required={field.required}
@@ -94,21 +100,52 @@ const DynamicForm = ({ schema, onSubmit }) => {
         );
       default:
         // Handle other HTML5 input types like date, email, etc.
-        return (
-          <Form.Control
-            type={field.type}
-            name={field.name}
-            placeholder={field.placeholder}
-            onChange={handleChange}
-            required={field.required}
-            value={formData[field.name] || ''}
-          />
-        );
+        if((!!field.readOnly && field.readOnly)) {
+          if(field.name === 'uuid') {
+            return (
+              <Form.Control
+                type={field.type}
+                name={field.name}
+                id={field.name}
+                placeholder={field.placeholder}
+                onChange={handleChange}
+                required={field.required}
+                readOnly
+                value={tempUuid}
+              />
+            );
+          } else {
+            return (
+              <Form.Control
+                type={field.type}
+                name={field.name}
+                id={field.name}
+                placeholder={field.placeholder}
+                onChange={handleChange}
+                required={field.required}
+                readOnly
+                value={formData[field.name] || ''}
+              />
+            );
+          }
+        } else {
+          return (
+            <Form.Control
+              type={field.type}
+              name={field.name}
+              id={field.name}
+              placeholder={field.placeholder}
+              onChange={handleChange}
+              required={field.required}
+              value={formData[field.name] || ''}
+            />
+          );
+        }
     }
   };
 
   return (
-    <Form onSubmit={handleSubmit}>
+    <Form onSubmit={handleSubmit} className='formData'>
       {schema.map((section, sectionIndex) => (
         <div key={sectionIndex}>
           <h3>{section.sectionTitle}</h3>
@@ -127,6 +164,21 @@ const DynamicForm = ({ schema, onSubmit }) => {
                   </Form.Group>
                 </Col>
               ))}
+          </Row>
+          <Row>
+            <Col md={12} sm={12}>
+              <Form.Group className="mb-3">
+                <Form.Control
+                as="textarea"
+                rows={3}
+                name={"message"}
+                id={"message"}
+                placeholder={"Commit message"}
+                onChange={handleChange}
+                required={true}
+                />
+              </Form.Group>
+            </Col>
           </Row>
         </div>
       ))}
