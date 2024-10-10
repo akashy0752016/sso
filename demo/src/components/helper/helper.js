@@ -37,40 +37,38 @@ export const capitalizeFirstLetter = (string) => {
     return string.charAt(0).toUpperCase() + string.slice(1)
 }
 
-export const processFormData = (formdata) => {
-    //console.log(formdata);
-    let selectFields = formdata[0].fields.filter(u => u.type === 'select');
+export const processFormData = (formData) => {
+    let selectFields = formData[0].fields.filter(u => u.type === 'select');
     if (selectFields.length > 0) {
-        //console.log(selectFields);
         selectFields = selectFields.map(u => {
             if(u.data !== null) {
                 if(u.data.type === 'directory') {
                     fetchData("getContent", u.data)
                     .then((data) => {
-                        //console.log(data);
-                        return Promise.all(data.filter(u=>!(u.name.startsWith("formData"))).map(u=>fetchRawFileFromUrlPromise(u.download_url)))
-                        .then(responses =>
-                            Promise.allSettled(responses.map(res => res.json()))
-                        ).then(json => {
-                            u.options = json.map(e => {
-                                return { label: e.value[u.data.key], value: e.value[u.data.key] };
-                            });
-                        });
+                        if(data.find(e=>!(e.name.startsWith("formData")))) {
+                            fetchRawFileFromUrlPromise(data.find(e=>!(e.name.startsWith("formData"))).download_url)
+                            .then(responses => responses.json())
+                            .then(json => {
+                                u.options = json.map(x => {
+                                    if(u.data.key in x) {
+                                        return { label: x[u.data.key], value: x[u.data.key] };
+                                    }
+                                    
+                                });
+                            })
+
+                        }
                     });
                 } else {
                     fetchData("fetchData", u.data)
                     .then((data) => {
                         console.log(data);
-                        //setData(data.objectDirectory);
-                        //setIsLoading(false);
-                        //setGitHubObj(gitHubObj);
                     });
                 }
                 
             }
             return u;
         });
-        console.log(selectFields);
-        return formdata.map(x => Object.assign(x, selectFields.find(y => y.name == x.name)));
+        return formData.map(x => Object.assign(x, selectFields.find(y => y.name == x.name)));
     }
 }
