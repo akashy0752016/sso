@@ -1,10 +1,51 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Form, Button, Row, Col } from 'react-bootstrap';
+import { fetchData, fetchRawFileFromUrlPromise } from '../helper/helper';
 
 const DynamicForm = ({ schema, onSubmit, tempUuid }) => {
   const [formData, setFormData] = useState({});
   const [formErrors, setFormErrors] = useState({});
 
+  useEffect(() => {
+    console.log(schema);
+    if(schema && schema.length > 0) {
+      (async () => {
+        var selectFields = schema[0].fields.filter(u => u.type === 'select');
+        if (selectFields.length > 0) {
+          selectFields = selectFields.map(u => {
+              if(u.data !== null) {
+                  if(u.data.type === 'directory') {
+                      fetchData("getContent", u.data)
+                      .then((data) => {
+                          if(data.find(e=>!(e.name.startsWith("formData")))) {
+                              fetchRawFileFromUrlPromise(data.find(e=>!(e.name.startsWith("formData"))).download_url)
+                              .then(responses => responses.json())
+                              .then(json => {
+                                  u.options = json.map(x => {
+                                      if(u.data.key in x) {
+                                          return { label: x[u.data.key], value: x[u.data.key] };
+                                      }
+                                      
+                                  });
+                              })
+
+                          }
+                      });
+                  } else {
+                      fetchData("fetchData", u.data)
+                      .then((data) => {
+                          console.log(data);
+                      });
+                  }
+                  
+              }
+              return u;
+          });
+          schema.map(x => Object.assign(x, selectFields.find(y => y.name == x.name)));
+        }
+      })();
+    }
+  },[schema]);
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     setFormData({

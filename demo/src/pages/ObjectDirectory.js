@@ -9,7 +9,7 @@ import PrettyPrintJson from "../components/common/PrettyPrintJson";
 import DynamicForm from "../components/common/DynamicForm";
 import {fetchRawFileFromUrlPromise, fetchData, getService, processFormData} from "../components/helper/helper.js";
 import { v4 as uuid } from 'uuid';
-import {Buffer} from 'buffer';
+import {Buffer, constants} from 'buffer';
 
 const ObjectDirectory = () => {
     const [data, setData] = useState([]);
@@ -23,8 +23,20 @@ const ObjectDirectory = () => {
     const [filePath, setFilePath] = useState([]);
     const [fileSha, setFileSha] = useState([]);
     
+    const handleAdd = () => {
+        var element = document.querySelector("#fullscreenModal #uuid");
+        var nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype,"value").set;
+        console.log(nativeInputValueSetter)
+        nativeInputValueSetter.call(element, uuid);
+        var inputEvent = new Event("input", { bubbles: true });
+        element.dispatchEvent(inputEvent);
+    };
     const handleFormSubmit = (formData) => {
         var element = document.querySelector("#fullscreenModal #uuid");
+        var nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype,"value").set;
+        nativeInputValueSetter.call(element, uuid);
+        var inputEvent = new Event("input", { bubbles: true });
+        element.dispatchEvent(inputEvent);
         const newData = {uuid: element.value, ...formData}
         let message = newData.message;
         delete newData.message;
@@ -78,8 +90,8 @@ const ObjectDirectory = () => {
                     })
                     .then((data) => {
                         let id = uuid();
-                        let formData = processFormData(data);
-                        setFormSchema(formData);
+                        //let formData = processFormData(data);
+                        setFormSchema(data);
                         setFormUuid(id);
                     });
                 }
@@ -129,7 +141,7 @@ const ObjectDirectory = () => {
                                                 <h5 className="card-title d-flex justify-content-between align-items-center">
                                                     {objectDirectorylement.title} 
                                                     {gitHubObj &&
-                                                        <button type="button" className="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#fullscreenModal">
+                                                        <button type="button" className="btn btn-sm btn-primary" onClick={handleAdd} data-bs-toggle="modal" data-bs-target="#fullscreenModal">
                                                             <i className="bi bi-plus"></i>
                                                         </button>
                                                     }

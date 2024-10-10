@@ -17,10 +17,28 @@ const TableComponent = ({ data, formSchema }) => {
     let obj = data.find(u => u.uuid === uuid);
     Object.keys(obj).forEach(function(k){
       console.log(k + ' - ' + obj[k]);
-      document.querySelector("#fullscreenEdit #" + k).value=obj[k];
+      var element = document.querySelector("#fullscreenEdit #" + k);
+      element.value = obj[k];
+      console.log(element);
+      setNativeValue(element, obj[k])
+      var inputEvent = new Event(obj.type, { bubbles: true });
+      element.dispatchEvent(inputEvent);
     });
     //console.log(document.querySelector("#fullscreenEdit #uuid"));
     
+  }
+
+  function setNativeValue(element, value) {
+    console.log(element.type)
+    const valueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value');
+    const prototype = Object.getPrototypeOf(element);
+    const prototypeValueSetter = Object.getOwnPropertyDescriptor(prototype, 'value').set;
+    
+    if (valueSetter && valueSetter !== prototypeValueSetter) {
+      prototypeValueSetter.call(element, value);
+    } else {
+      valueSetter.call(element, value);
+    }
   }
   return (
     <div className="table-responsive">
